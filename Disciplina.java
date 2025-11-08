@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Disciplina {
 	//Essa classe contém praticamente todos os métodos usados
+	//Criação dos atributos;
 	private String nome;
 	private ArrayList<Aluno> alunos = new ArrayList<Aluno>();
 	private String gabarito;
