@@ -1,4 +1,3 @@
-package trabalhoArquivo;
 
 //MUITOS IMPORTS, TODOS SENDO USADOS
 import java.io.File;
