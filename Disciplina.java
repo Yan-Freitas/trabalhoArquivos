@@ -1,4 +1,3 @@
-package trabalhoArquivo;
 
 import java.io.File;
 import java.io.FileWriter;
