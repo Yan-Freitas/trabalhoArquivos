@@ -73,7 +73,7 @@ public class Disciplina {
 	//Isso aqui tá estático porque não depende de objeto e na verdade é pra criar o arquivo de texto da disciplina, então posso só invocar pela classe
 	public static boolean criarDisciplina(String diretorioAbsoluto, String nome) {
 		try {
-			File disciplina = new File(diretorioAbsoluto+"/disciplinas/"+nome);
+			File disciplina = new File(diretorioAbsoluto+"/disciplinas/"+nome+".txt");
 			//Isso aqui é pra checar se o arquivo já existe
 			if(disciplina.createNewFile()) {
 				System.out.println("Disciplina "+disciplina.getName()+" criada!");

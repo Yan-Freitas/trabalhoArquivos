@@ -26,16 +26,15 @@ public class Main {
 		File pasta = new File(diretorioAbsoluto+"/disciplinas");
 		File[] listadeDisciplinas = pasta.listFiles();
 		//Esse for pega cada arquivo na pasta de disciplinas que estão salvos em um array de files acima
-		//Essa parte está dando erro!!
+		int index = 0;
 		for (File file : listadeDisciplinas) {
 			Path path = FileSystems.getDefault().getPath(diretorioAbsoluto+"/disciplinas", file.getName());
 			try {
-				//Esse mimetype é pra checar o tipo do arquivo
-				String mimeType = Files.probeContentType(path);
+				//Esse fileType é pra checar o tipo do arquivo
+				String fileType = Files.probeContentType(path);
 				try {
-					int index = 0;
 					//Isso aqui é pra checar se é um arquivo de texto
-					if(mimeType.equalsIgnoreCase("text/plain")) {
+					if(fileType.equalsIgnoreCase("text/plain")) {
 						Scanner leitor = new Scanner(file);
 						disciplinas.add(new Disciplina(file.getName()));
 						//Isso aqui é pra adicionar os alunos em cada disciplina encontrada.
@@ -45,9 +44,7 @@ public class Main {
 						}
 					}
 					index++;
-				}catch(NullPointerException e) {//Erro aqui
-					System.out.println("Erro!");
-					System.out.println(e.getMessage());
+				}catch(NullPointerException e) {
 				}
 			} catch (IOException e) {
 				System.out.println("Ocorreu um erro!");
@@ -87,11 +84,12 @@ public class Main {
 					respostas=teclado.next();
 					matcher = pattern.matcher(respostas);
 					while(!(respostas.length()==10)||!matcher.find()) {
-						System.out.println("O gabarito precisa ter exatamente 10 respostas e aceita apenas V ou F!");
+						System.out.println("O aluno precisa ter exatamente 10 respostas!");
+						System.out.println("As respostas só podem ser V ou F!");
 						respostas = teclado.next();
 						matcher = pattern.matcher(respostas);
 					}
-					disciplinas.get(disciplinas.size()-1).gerarGabarito(diretorioAbsoluto, respostas);
+					disciplinas.getLast().gerarGabarito(diretorioAbsoluto, respostas);
 					break;
 			//Esse case aqui é pra adicionar alunos.
 				case 2:
@@ -99,13 +97,13 @@ public class Main {
 					System.out.println("-----Disciplinas-----");
 					int cont=0;
 					for(Disciplina disciplina : disciplinas) {
-						System.out.println(disciplinas.indexOf(disciplina)+" "+")"+" "+disciplina.getNome());
+						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
 						cont++;
 					}
 					int disciplinaIndex;
 					do{
 						System.out.print("Insira uma opção válida: ");
-						disciplinaIndex = teclado.nextInt();
+						disciplinaIndex = teclado.nextInt()-1;
 					}while(disciplinaIndex<0 || disciplinaIndex>=cont);
 					System.out.print("Quantidade de Alunos: ");
 					int qtdAlunos = teclado.nextInt();
@@ -120,7 +118,7 @@ public class Main {
 						//A lógica do pattern matcher sendo invocada ai
 						while(!(respostas.length()==10)||!matcher.find()) {
 							System.out.println("O aluno precisa ter exatamente 10 respostas!");
-							System.out.println("As respostas só podem ser V ou F");
+							System.out.println("As respostas só podem ser V ou F!");
 							System.out.print("Respostas: ");
 							respostas = teclado.next();
 							matcher = pattern.matcher(respostas);
@@ -149,14 +147,20 @@ public class Main {
 					disciplinas.get(disciplinaIndex).gerarGabarito(diretorioAbsoluto,respostas);
 					break;
 				//Esse case aí é pra ver os alunos da disciplina que o cara escolher, sinceramente só fiz pra checar se os negócios estavam sendo salvos direitos no arraylist
-				case 4://TODO: Verificar visualização
-					System.out.println("Escolha a disciplina que quer ver");
+				case 4:
+					System.out.println("-----Disciplinas-----");
 					for(Disciplina disciplina : disciplinas) {
-						System.out.println(disciplinas.indexOf(disciplina)+" "+")"+" "+disciplina.getNome());
+						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
 					}
-					disciplinaIndex = teclado.nextInt();
+					do{
+						System.out.print("Insira uma opção válida: ");
+						disciplinaIndex = teclado.nextInt()-1;
+					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
+					System.out.println("-----Lista de Alunos-----");
 					for(Aluno aluno : disciplinas.get(disciplinaIndex).getAlunos()) {
-						System.out.println(aluno.getNome()+" "+aluno.getRespostas());
+						System.out.println("Nome: "+aluno.getNome());
+						System.out.println("Respostas: "+aluno.getRespostas().toUpperCase());
+						System.out.println();
 					}
 					break;
 					case 5://TODO: Visualizar resultados dos alunos e permitir que o usuário escolher entre resultados alfabéticos e decrescentes
