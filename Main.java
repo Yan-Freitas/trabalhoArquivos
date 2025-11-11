@@ -76,7 +76,7 @@ public class Main {
 					String disciplinaNome;
 					do{
 						System.out.print("Disciplina: ");
-						disciplinaNome=teclado.next();
+						disciplinaNome=teclado.next()+".txt";
 					}while(!Disciplina.criarDisciplina(diretorioAbsoluto, disciplinaNome));
 					disciplinas.add(new Disciplina(disciplinaNome));
 					String respostas;
@@ -164,6 +164,7 @@ public class Main {
 					}
 					break;
 					case 5://TODO: Visualizar resultados dos alunos e permitir que o usuário escolher entre resultados alfabéticos e decrescentes
+
 						break;
 					case 6:
 						sair = true;
