@@ -26,13 +26,16 @@ public class Disciplina {
 	public String getGabarito() {
 		return gabarito;
 	}
+
+	public void setGabarito(String gabarito) {
+		this.gabarito = gabarito;
+	}
+
 	//Isso daqui retorna a quantidade de alunos que tem no arraylist de alunos, criei isso pra usar em outro método aqui;
 	public int getTamanho() {
 		return alunos.size();
 	}
-	public void setGabarito(String gabarito) {
-		this.gabarito = gabarito;
-	}
+
 	//Isso daqui retorna um array de alunos, eu criei esse método pra deixar outro processo lá no main mais bonito
 	public Aluno[] getAlunos() {
 		Aluno[] turma = new Aluno[getTamanho()];
@@ -138,12 +141,10 @@ public class Disciplina {
 	}
 	//Isso aqui é pra achar o diretório no qual os arquivos estão e possibilitar a criação dos arquivos em qualquer máquina
 	public static String acharDiretorioAbsoluto(){
-		File arquivoTemp;
-		File arquivoTemp2;
-		arquivoTemp = new File("arquivotemp.txt");
-		arquivoTemp2 = arquivoTemp.getAbsoluteFile().getParentFile();
-		arquivoTemp2.deleteOnExit();
+		File arquivoTemp = new File("arquivotemp.txt");
+		File arquivoTemp2 = arquivoTemp.getAbsoluteFile().getParentFile();
 		arquivoTemp.deleteOnExit();
+		arquivoTemp2.deleteOnExit();
 		return arquivoTemp2.getAbsolutePath();
 	}
 }
