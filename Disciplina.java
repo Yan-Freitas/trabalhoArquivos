@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -48,6 +47,50 @@ public class Disciplina {
 		}
 		return turma;
 	}
+
+	//Isso aqui tá estático porque não depende de objeto e na verdade é pra criar o arquivo de texto da disciplina, então posso só invocar pela classe
+	public static boolean criarDisciplina(String diretorioAbsoluto, String nome) {
+		try {
+			File disciplina = new File(diretorioAbsoluto+"/disciplinas/"+nome);
+			//Isso aqui é pra checar se o arquivo já existe
+			if(disciplina.createNewFile()) {
+				System.out.println("Disciplina "+disciplina.getName()+" criada!");
+				return true;
+			}else {
+				System.out.println("Disciplina já existe");
+				return false;
+			}
+		}catch(IOException e) {
+			System.out.println("Um erro ocorreu");
+		    e.printStackTrace();
+		}
+		return true;
+	}
+
+	//Isso aqui gera o gabarito da disciplina que fica salvo na pasta de gabaritos
+	public void gerarGabarito(String diretorioAbsoluto, String respostas) {
+		try {
+			File disciplinaGabarito = new File(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
+			FileWriter filewriter;
+			gabarito = respostas;
+			//Isso aqui é pra checar se o arquivo já existe
+			if(disciplinaGabarito.createNewFile()) {
+				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
+				filewriter.write(respostas.toUpperCase());
+				System.out.println("Gabarito gerado!");
+			}
+			else {
+				System.out.println("Gabarito já existe, anexando novas respostas ao gabarito existente");
+				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
+				filewriter.write(respostas.toUpperCase());
+			}
+			filewriter.close();
+		}catch(IOException e){
+		  System.out.println("Ocorreu um erro");
+	      e.printStackTrace();
+		}
+	}
+	
 	//Adiciona um aluno no arraylist
 	public void adicionarAluno(String nome, String respostas) {
 		alunos.add(new Aluno(nome,respostas));
@@ -74,47 +117,7 @@ public class Disciplina {
 		      e.printStackTrace();
 	    }
 	}
-	//Isso aqui tá estático porque não depende de objeto e na verdade é pra criar o arquivo de texto da disciplina, então posso só invocar pela classe
-	public static boolean criarDisciplina(String diretorioAbsoluto, String nome) {
-		try {
-			File disciplina = new File(diretorioAbsoluto+"/disciplinas/"+nome);
-			//Isso aqui é pra checar se o arquivo já existe
-			if(disciplina.createNewFile()) {
-				System.out.println("Disciplina "+disciplina.getName()+" criada!");
-				return true;
-			}else {
-				System.out.println("Disciplina já existe");
-				return false;
-			}
-		}catch(IOException e) {
-			System.out.println("Um erro ocorreu");
-		    e.printStackTrace();
-		}
-		return true;
-	}
-	//Isso aqui gera o gabarito da disciplina que fica salvo na pasta de gabaritos
-	public void gerarGabarito(String diretorioAbsoluto, String respostas) {
-		try {
-			File disciplinaGabarito = new File(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
-			FileWriter filewriter;
-			gabarito = respostas;
-			//Isso aqui é pra checar se o arquivo já existe
-			if(disciplinaGabarito.createNewFile()) {
-				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
-				filewriter.write(respostas.toUpperCase());
-				System.out.println("Gabarito gerado!");
-			}
-			else {
-				System.out.println("Gabarito já existe, anexando novas respostas ao gabarito existente");
-				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
-				filewriter.write(respostas.toUpperCase());
-			}
-			filewriter.close();
-		}catch(IOException e){
-		  System.out.println("Ocorreu um erro");
-	      e.printStackTrace();
-		}
-	}
+
 	//Isso aqui era pra gerar o resultado do gabarito que ficaria salvo na pasta resultados, só que ainda não tá completa
 	//FINALIZAR MÉTODO
 	public void gerarResultados(String diretorioAbsoluto) {
@@ -136,10 +139,10 @@ public class Disciplina {
 		ArrayList<Aluno> alunosAlfabetico = new ArrayList<>(alunos);
 		ArrayList<Aluno> alunosDecrescente = new ArrayList<>(alunos);
 		int quantidadeAlunos=alunos.size();
-		for (int i=0;i<quantidadeAlunos-2;i++){
+		for (int i=0;i<quantidadeAlunos-1;i++){
 			for (int j=0;j<quantidadeAlunos-i-1;j++){
 				//Ordenação Alfabética
-				if(alunosAlfabetico.get(j).getNome().compareToIgnoreCase(alunosAlfabetico.get(j+1).getNome())>0){
+				if((alunosAlfabetico.get(j).getNome().compareToIgnoreCase(alunosAlfabetico.get(j+1).getNome()))>0){
 					Aluno aux2 = alunosAlfabetico.get(j+1);
 					alunosAlfabetico.set(j+1,alunosAlfabetico.get(j));
 					alunosAlfabetico.set(j,aux2);

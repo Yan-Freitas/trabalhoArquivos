@@ -1,5 +1,3 @@
-
-//MUITOS IMPORTS, TODOS SENDO USADOS
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -72,7 +70,7 @@ public class Main {
 			switch(opcao){
 				//Cria o arquivo da disciplina(Onde o nome dos alunos e seu gabarito serão armazenados) e o arquivo do gabarito oficial
 				case 1:
-					pattern = Pattern.compile("^[vf]{10}$", Pattern.CASE_INSENSITIVE);
+					pattern = Pattern.compile("^[VF]{10}$", Pattern.CASE_INSENSITIVE);
 					String disciplinaNome;
 					do{
 						System.out.print("Disciplina: ");
@@ -101,12 +99,12 @@ public class Main {
 					break;
 				//Adiciona alunos no arquivo da disciplina correspondente
 				case 2:
-					pattern = Pattern.compile("^[vf]{10}$", Pattern.CASE_INSENSITIVE);
+					pattern = Pattern.compile("^[VF]{10}$", Pattern.CASE_INSENSITIVE);
 					//Esse negócio de pattern é para checar se a resposta contém APENAS v ou f ou ambas na string por meio do regex
 					System.out.println("-----Disciplinas-----");
 					int cont=0;
 					for(Disciplina disciplina : disciplinas) {
-						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
+						System.out.println((disciplinas.indexOf(disciplina)+1)+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
 						cont++;
 					}
 					int disciplinaIndex;
@@ -136,14 +134,14 @@ public class Main {
 							respostas = teclado.next();
 							matcher = pattern.matcher(respostas);
 						}
-						disciplinas.get(disciplinaIndex).adicionarAluno(diretorioAbsoluto, nome, respostas);
+						disciplinas.get(disciplinaIndex).adicionarAluno(diretorioAbsoluto, nome, respostas.toUpperCase());
 					}
 					break;
 				//Gera e imprime as pontuações dos alunos e a média da turma
 				case 3:
 					System.out.println("-----Disciplinas-----");
 					for(Disciplina disciplina : disciplinas) {
-						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
+						System.out.println((disciplinas.indexOf(disciplina)+1)+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
 					}
 					do{
 						System.out.print("Insira uma opção válida: ");

@@ -1,4 +1,3 @@
-
 public class Aluno {
 	//Esse negócio só presta pra ter o construtor
 	private String nome;
