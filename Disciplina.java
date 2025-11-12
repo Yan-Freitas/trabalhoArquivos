@@ -1,6 +1,8 @@
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -116,9 +118,16 @@ public class Disciplina {
 	//Isso aqui era pra gerar o resultado do gabarito que ficaria salvo na pasta resultados, só que ainda não tá completa
 	//FINALIZAR MÉTODO
 	public void gerarResultados(String diretorioAbsoluto) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(diretorioAbsoluto+"/disciplinas/gabaritos/Gabarito "+getNome()))) {
+            gabarito = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 		for(Aluno a : alunos) {
 			a.setGabarito(gabarito);
 		}
+
 		try {
             // ====== 1. Ordena alfabeticamente ======
             alunos.sort(Comparator.comparing(Aluno::getNome));
@@ -127,14 +136,9 @@ public class Disciplina {
             resultadoAlfabetico.getParentFile().mkdirs(); // cria diretórios se não existirem
 
             // try-with-resources fecha o writer automaticamente
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultadoAlfabetico, true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultadoAlfabetico))) {
                 for (Aluno a : alunos) {
-                    writer
-                        .append(a.getRespostas().toUpperCase())
-                        .append("\t")
-                        .append(a.getNome())
-                        .append("\t")
-                        .append(String.valueOf(a.gerarNota()));
+                    writer.write(a.getRespostas().toUpperCase()+"\t"+a.getNome()+"\t"+a.gerarNota());
 					writer.newLine();
                 }
             }
@@ -147,12 +151,7 @@ public class Disciplina {
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultadoDecrescente))) {
                 for (Aluno a : alunos) {
-                    writer
-                        .append(a.getRespostas().toUpperCase())
-                        .append("\t")
-                        .append(a.getNome())
-                        .append("\t")
-                        .append(String.valueOf(a.gerarNota()));
+                    writer.write(a.getRespostas().toUpperCase()+"\t"+a.getNome()+"\t"+a.gerarNota());
 					writer.newLine();
                 }
             }

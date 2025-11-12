@@ -22,7 +22,11 @@ public class Aluno {
 	}
 
 	public void setGabarito(String gabarito) {
+		this.gabarito = gabarito;
+	}
 
+	public String getGabarito() {
+		return gabarito;
 	}
 
 	public int gerarNota() {
@@ -35,7 +39,7 @@ public class Aluno {
 		
 		int acertos = 0;
 		for(int x = 0;x<10;x++) {
-			if(getRespostas().charAt(x)==gabarito.charAt(x)) {
+			if(getRespostas().toUpperCase().charAt(x)==gabarito.toUpperCase().charAt(x)) {
 				acertos++;
 			}
 		}

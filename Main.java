@@ -40,7 +40,7 @@ public class Main {
 						//Isso aqui é pra adicionar os alunos em cada disciplina encontrada.
 						while(leitor.hasNextLine()) {
 							String data = leitor.nextLine();
-							disciplinas.get(index).adicionarAluno(data.substring(11),data.substring(0, 9));
+							disciplinas.get(index).adicionarAluno(data.substring(11).trim(),data.substring(0, 10));
 						}
 					}
 					index++;
@@ -133,18 +133,9 @@ public class Main {
 					for(Disciplina disciplina : disciplinas) {
 						System.out.println(disciplinas.indexOf(disciplina)+" "+"--"+" "+disciplina.getNome());
 					}
-					disciplinaIndex = teclado.nextInt();
-					System.out.println("Escreva o gabarito");
-					respostas = teclado.next();
-					matcher = pattern.matcher(respostas);
-					//A mesma lógica do pattern matcher
-					while(!(respostas.length()==10)||!matcher.find()) {
-						System.out.println("O gabarito precisa ter exatamente 10 respostas e podem ser só V ou F");
-						respostas = teclado.next();
-						matcher = pattern.matcher(respostas);
-					}
-					//Até agora só o método de gerar gabarito tá sendo invocado porque ele tá prestando
-					disciplinas.get(disciplinaIndex).gerarGabarito(diretorioAbsoluto,respostas);
+					do {
+						disciplinaIndex = teclado.nextInt();
+					} while (disciplinaIndex < 0 || disciplinaIndex >= disciplinas.size());
 					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
 					break;
 				//Esse case aí é pra ver os alunos da disciplina que o cara escolher, sinceramente só fiz pra checar se os negócios estavam sendo salvos direitos no arraylist
