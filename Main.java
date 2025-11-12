@@ -42,6 +42,7 @@ public class Main {
 							String data = leitor.nextLine();
 							disciplinas.get(index).adicionarAluno(data.substring(11),data.substring(0, 10));
 						}
+						leitor.close();
 					}
 					index++;
 				}catch(NullPointerException e) {
@@ -61,18 +62,17 @@ public class Main {
 			System.out.println("1) Nova Disciplina");
 			System.out.println("2) Cadastrar Alunos");
 			System.out.println("3) Gerar Resultado");
-			System.out.println("4) Visualizar Disciplinas");
-			System.out.println("5) Visualizar Resultados");
-			System.out.println("6) Sair");
+			System.out.println("4) Sair");
 			do{
 				System.out.print("Insira uma opção válida: ");
 				opcao=teclado.nextInt();
-			}while(opcao!=1 && opcao!=2 && opcao!=3 && opcao!=4 && opcao!=5 && opcao!=6);
-			Pattern pattern = Pattern.compile("[v|f]", Pattern.CASE_INSENSITIVE);
+			}while(opcao!=1 && opcao!=2 && opcao!=3 && opcao!=4);
+			Pattern pattern;
 			Matcher matcher;
 			switch(opcao){
-			//Esse case aqui é pra adicionar uma disciplina, aí ela cria um arquivo de texto e ao mesmo tempo adiciona no arraylist de disciplinas
+				//Cria o arquivo da disciplina(Onde o nome dos alunos e seu gabarito serão armazenados) e o arquivo do gabarito oficial
 				case 1:
+					pattern = Pattern.compile("^[vf]{10}$", Pattern.CASE_INSENSITIVE);
 					String disciplinaNome;
 					do{
 						System.out.print("Disciplina: ");
@@ -83,16 +83,25 @@ public class Main {
 					System.out.print("Respostas: ");
 					respostas=teclado.next();
 					matcher = pattern.matcher(respostas);
-					while(!(respostas.length()==10)||!matcher.find()) {
-						System.out.println("O gabarito deve ter exatamente 10 respostas!");
-						System.out.println("As respostas só podem ser V ou F!");
+					while(!matcher.matches()||respostas.toUpperCase().equals("VVVVVVVVVV")||respostas.toUpperCase().equals("FFFFFFFFFF")) {
+						if (!(respostas.length()==10)){
+							System.out.println("O gabarito deve ter exatamente 10 respostas!");
+						}
+						if (!matcher.matches()){
+							System.out.println("As respostas só podem ser V ou F!");
+						}
+						if (respostas.toUpperCase().equals("VVVVVVVVVV")||respostas.toUpperCase().equals("FFFFFFFFFF")){
+							System.out.println("As respostas não podem ser todas iguais!");
+						}
+						System.out.print("Respostas: ");
 						respostas = teclado.next();
 						matcher = pattern.matcher(respostas);
 					}
 					disciplinas.getLast().gerarGabarito(diretorioAbsoluto, respostas);
 					break;
-			//Esse case aqui é pra adicionar alunos.
+				//Adiciona alunos no arquivo da disciplina correspondente
 				case 2:
+					pattern = Pattern.compile("^[vf]{10}$", Pattern.CASE_INSENSITIVE);
 					//Esse negócio de pattern é para checar se a resposta contém APENAS v ou f ou ambas na string por meio do regex
 					System.out.println("-----Disciplinas-----");
 					int cont=0;
@@ -116,9 +125,13 @@ public class Main {
 						respostas = teclado.next();
 						matcher = pattern.matcher(respostas);
 						//A lógica do pattern matcher sendo invocada ai
-						while(!(respostas.length()==10)||!matcher.find()) {
-							System.out.println("O aluno precisa ter exatamente 10 respostas!");
-							System.out.println("As respostas só podem ser V ou F!");
+						while(!matcher.matches()) {
+							if (!(respostas.length()==10)){
+								System.out.println("O gabarito deve ter exatamente 10 respostas!");
+							}
+							if (!matcher.matches()){
+								System.out.println("As respostas só podem ser V ou F!");
+							}
 							System.out.print("Respostas: ");
 							respostas = teclado.next();
 							matcher = pattern.matcher(respostas);
@@ -126,9 +139,8 @@ public class Main {
 						disciplinas.get(disciplinaIndex).adicionarAluno(diretorioAbsoluto, nome, respostas);
 					}
 					break;
-				//Expandir para gerar o resultado dos alunos
-				//Esse case aí é pra gerar o gabarito, como dito acima ainda falta gerar o arquivo dos alunos, por enquanto gera só o gabarito
-				case 3://TODO: Gerar os resultados dos alunos e média da disciplina
+				//Gera e imprime as pontuações dos alunos e a média da turma
+				case 3:
 					System.out.println("-----Disciplinas-----");
 					for(Disciplina disciplina : disciplinas) {
 						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
@@ -138,40 +150,25 @@ public class Main {
 						disciplinaIndex = teclado.nextInt()-1;
 					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
 					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
-					break;
-				//Esse case aí é pra ver os alunos da disciplina que o cara escolher, sinceramente só fiz pra checar se os negócios estavam sendo salvos direitos no arraylist
-				case 4:
-					System.out.println("-----Disciplinas-----");
-					for(Disciplina disciplina : disciplinas) {
-						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
-					}
+					System.out.println("Resultado Gerado!");
+					int opcao3=0;
+					System.out.println("-----Visualização-----");
+					System.out.println("1) Ordem Alfabética");
+					System.out.println("2) Ordem Decrescente");
 					do{
 						System.out.print("Insira uma opção válida: ");
-						disciplinaIndex = teclado.nextInt()-1;
-					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
-					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
-					break;
-				case 5://TODO: Visualizar resultados dos alunos e permitir que o usuário escolher entre resultados alfabéticos e decrescentes
-					System.out.println("-----Disciplinas-----");
-					for(Disciplina disciplina : disciplinas) {
-						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
-					}
-					do{
-						System.out.print("Insira uma opção válida: ");
-						disciplinaIndex = teclado.nextInt()-1;
-					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
+						opcao3=teclado.nextInt();
+					}while(opcao3!=1 && opcao3!=2);
 					System.out.println("-----Resultados-----");
-					for(Aluno aluno : disciplinas.get(disciplinaIndex).getAlunos()) {
-						System.out.println("Nome: "+aluno.getNome());
-						System.out.println("Nota: ");
-						System.out.println();
-					}
+					disciplinas.get(disciplinaIndex).mostrarResultados(diretorioAbsoluto,opcao3);
 					break;
-				case 6:
+				//Sai do sistema
+				case 4:
 					sair = true;
 					break;
 			}
 		}while(!sair);
+		teclado.close();
 	}
 	
 }

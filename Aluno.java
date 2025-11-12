@@ -34,7 +34,7 @@ public class Aluno {
 				pontuacao++;
 			}
 		}
-		if (respostas=="VVVVVVVVVV" || respostas=="FFFFFFFFFF"){
+		if (respostas.toUpperCase().equals("VVVVVVVVVV") || respostas.toUpperCase().equals("FFFFFFFFFF")){
 			pontuacao=0;
 		}
 	}
