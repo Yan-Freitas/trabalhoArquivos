@@ -145,6 +145,7 @@ public class Main {
 					}
 					//Até agora só o método de gerar gabarito tá sendo invocado porque ele tá prestando
 					disciplinas.get(disciplinaIndex).gerarGabarito(diretorioAbsoluto,respostas);
+					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
 					break;
 				//Esse case aí é pra ver os alunos da disciplina que o cara escolher, sinceramente só fiz pra checar se os negócios estavam sendo salvos direitos no arraylist
 				case 4:
