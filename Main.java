@@ -40,7 +40,7 @@ public class Main {
 						//Isso aqui é pra adicionar os alunos em cada disciplina encontrada.
 						while(leitor.hasNextLine()) {
 							String data = leitor.nextLine();
-							disciplinas.get(index).adicionarAluno(data.substring(11),data.substring(0, 9));
+							disciplinas.get(index).adicionarAluno(data.substring(11),data.substring(0, 10));
 						}
 					}
 					index++;
@@ -84,7 +84,7 @@ public class Main {
 					respostas=teclado.next();
 					matcher = pattern.matcher(respostas);
 					while(!(respostas.length()==10)||!matcher.find()) {
-						System.out.println("O aluno precisa ter exatamente 10 respostas!");
+						System.out.println("O gabarito deve ter exatamente 10 respostas!");
 						System.out.println("As respostas só podem ser V ou F!");
 						respostas = teclado.next();
 						matcher = pattern.matcher(respostas);
@@ -129,22 +129,15 @@ public class Main {
 				//Expandir para gerar o resultado dos alunos
 				//Esse case aí é pra gerar o gabarito, como dito acima ainda falta gerar o arquivo dos alunos, por enquanto gera só o gabarito
 				case 3://TODO: Gerar os resultados dos alunos e média da disciplina
-					System.out.println("Escolha a disciplina que quer criar o resultado");
+					System.out.println("-----Disciplinas-----");
 					for(Disciplina disciplina : disciplinas) {
-						System.out.println(disciplinas.indexOf(disciplina)+" "+"--"+" "+disciplina.getNome());
+						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
 					}
-					disciplinaIndex = teclado.nextInt();
-					System.out.println("Escreva o gabarito");
-					respostas = teclado.next();
-					matcher = pattern.matcher(respostas);
-					//A mesma lógica do pattern matcher
-					while(!(respostas.length()==10)||!matcher.find()) {
-						System.out.println("O gabarito precisa ter exatamente 10 respostas e podem ser só V ou F");
-						respostas = teclado.next();
-						matcher = pattern.matcher(respostas);
-					}
-					//Até agora só o método de gerar gabarito tá sendo invocado porque ele tá prestando
-					disciplinas.get(disciplinaIndex).gerarGabarito(diretorioAbsoluto,respostas);
+					do{
+						System.out.print("Insira uma opção válida: ");
+						disciplinaIndex = teclado.nextInt()-1;
+					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
+					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
 					break;
 				//Esse case aí é pra ver os alunos da disciplina que o cara escolher, sinceramente só fiz pra checar se os negócios estavam sendo salvos direitos no arraylist
 				case 4:
@@ -156,19 +149,27 @@ public class Main {
 						System.out.print("Insira uma opção válida: ");
 						disciplinaIndex = teclado.nextInt()-1;
 					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
-					System.out.println("-----Lista de Alunos-----");
+					disciplinas.get(disciplinaIndex).gerarResultados(diretorioAbsoluto);
+					break;
+				case 5://TODO: Visualizar resultados dos alunos e permitir que o usuário escolher entre resultados alfabéticos e decrescentes
+					System.out.println("-----Disciplinas-----");
+					for(Disciplina disciplina : disciplinas) {
+						System.out.println((disciplinas.indexOf(disciplina)+1)+" "+")"+" "+disciplina.getNome().substring(0,disciplina.getNome().indexOf(".")));
+					}
+					do{
+						System.out.print("Insira uma opção válida: ");
+						disciplinaIndex = teclado.nextInt()-1;
+					}while(disciplinaIndex<0 || disciplinaIndex>=disciplinas.size());
+					System.out.println("-----Resultados-----");
 					for(Aluno aluno : disciplinas.get(disciplinaIndex).getAlunos()) {
 						System.out.println("Nome: "+aluno.getNome());
-						System.out.println("Respostas: "+aluno.getRespostas().toUpperCase());
+						System.out.println("Nota: ");
 						System.out.println();
 					}
 					break;
-					case 5://TODO: Visualizar resultados dos alunos e permitir que o usuário escolher entre resultados alfabéticos e decrescentes
-
-						break;
-					case 6:
-						sair = true;
-						break;
+				case 6:
+					sair = true;
+					break;
 			}
 		}while(!sair);
 	}

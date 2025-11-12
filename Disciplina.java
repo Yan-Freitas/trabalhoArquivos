@@ -1,5 +1,8 @@
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,30 +117,56 @@ public class Disciplina {
 	//Isso aqui era pra gerar o resultado do gabarito que ficaria salvo na pasta resultados, só que ainda não tá completa
 	//FINALIZAR MÉTODO
 	public void gerarResultados(String diretorioAbsoluto) {
+		String respostasCorretas=null;
+		try {
+			FileReader fileReader = new FileReader(diretorioAbsoluto+"/disciplinas/gabaritos/"+"Gabarito"+" "+nome);
+			BufferedReader bf = new BufferedReader(fileReader);
+			respostasCorretas = bf.readLine();
+			bf.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		System.out.println(respostasCorretas);
 		for(int i = 0;i<alunos.size();i++) {
-			try {
-				int acertos = 0;
-				//Isso aqui de checar os acertos já tá prestando
-				for(int x = 0;x<10;x++) {
-					if(alunos.get(i).getRespostas().charAt(x)==gabarito.charAt(x)) {
-						acertos++;
-					}
+			alunos.get(i).gerarNota(respostasCorretas);
+		}
+		ArrayList<Aluno> alunosAlfabetico = new ArrayList<>(alunos);
+		ArrayList<Aluno> alunosDecrescente = new ArrayList<>(alunos);
+		int quantidadeAlunos=alunos.size();
+		for (int i=0;i<quantidadeAlunos-2;i++){
+			for (int j=i;j<quantidadeAlunos-1;j++){
+				Aluno aux = alunosDecrescente.get(j+1);
+				//Ordenação Decrescente
+				if(alunosDecrescente.get(j+1).getPontuacao()>alunosDecrescente.get(j).getPontuacao()){
+					alunosDecrescente.set(j+1,alunosDecrescente.get(j));
+					alunosDecrescente.set(j,aux);
 				}
-				//Ajeitar esse negócio pra escrever em ordem alfabética e decrescente
-				//Como foi dito acima precisa ajeitar pra escrever em ordem alfabética e decrescente
-				FileWriter filewriter;
-				File resultadoAlfabetico = new File(diretorioAbsoluto+"/disciplinas/resultados/alfabetico/"+alunos.get(i).getNome());
-				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"resultados/alfabetico/"+alunos.get(i).getNome());
-				filewriter.write(alunos.get(i).getRespostas().toUpperCase()+"	"+alunos.get(i).getNome()+" -- "+acertos+" acertos");
-				filewriter.close();
-				File resultadoDecrescente = new File(diretorioAbsoluto+"/disciplinas/resultados/decrescente/"+ alunos.get(i).getNome());
-				filewriter = new FileWriter(diretorioAbsoluto+"/disciplinas/gabaritos/"+"resultados/decrescente/"+alunos.get(i).getNome());
-				filewriter.close();
-			}catch(IOException e){
-				  System.out.println("Ocorreu um erro");
-			      e.printStackTrace();
+				//Ordenação Alfabética
+				if(alunosAlfabetico.get(j).getNome().compareToIgnoreCase(alunosAlfabetico.get(j+1).getNome())>0){
+					alunosAlfabetico.set(j+1,alunosAlfabetico.get(j));
+					alunosAlfabetico.set(j,aux);
+				}
 			}
 		}
+		for(int i = 0;i<quantidadeAlunos;i++) {
+			try {
+				FileWriter filewriter;
+				File resultadoAlfabetico = new File(diretorioAbsoluto+"/disciplinas/resultados/alfabetico/"+alunosAlfabetico.get(i).getNome());
+				filewriter = new FileWriter(resultadoAlfabetico);
+				filewriter.write(alunosAlfabetico.get(i).getRespostas().toUpperCase()+"	"+alunosAlfabetico.get(i).getNome()+"	"+alunosAlfabetico.get(i).getPontuacao()+" pontuacao");
+				filewriter.close();
+				File resultadoDecrescente = new File(diretorioAbsoluto+"/disciplinas/resultados/decrescente/"+ alunosDecrescente.get(i).getNome());
+				filewriter = new FileWriter(resultadoDecrescente);
+				filewriter.write(alunosDecrescente.get(i).getRespostas().toUpperCase()+"	"+alunosDecrescente.get(i).getNome()+"	"+alunosDecrescente.get(i).getPontuacao()+" pontuacao");
+				filewriter.close();
+		}catch(IOException e){
+				System.out.println("Ocorreu um erro");
+				e.printStackTrace();
+		}
+		}
+		
 	}
 	//Isso aqui é pra achar o diretório no qual os arquivos estão e possibilitar a criação dos arquivos em qualquer máquina
 	public static String acharDiretorioAbsoluto(){
